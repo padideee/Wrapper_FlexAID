@@ -1,16 +1,6 @@
 #!/usr/bin/perl
 
 
-$usage = "USAGE: FlexAID_Batch.pl -t target_pdbfile -l ligands -c cleft_pdbfile -b 1 -p 500 -g 500 -a lib_path \n";
-$usage .= "\t  -t  target pdbfile\n";
-$usage .= "\t  -l  Filename containing the ID of ligand input files\n";
-$usage .= "\t  -c  cleft pdbfile\n";
-$usage .= "\t  -b  runs\n";
-$usage .= "\t  -p  GA Population size \n";
-$usage .= "\t  -g  GA number of generations \n";
-$usage .= "\t  -a  library path\n";
-
-
 while(@ARGV){
 
   $arg = shift @ARGV;
@@ -29,7 +19,7 @@ while(@ARGV){
 $ligid=$tmp[$#tmp-1];
 $config_file="CONFIG_".$ligid.".inp";
 $ga_file ="ga_inp_".$ligid.".dat";
-$logfile ="logfile".$ligid;
+$logfile ="logfile_".$ligid;
 
 write_ga_inp($numchrom,$numgener,$ga_file);
 
@@ -37,7 +27,7 @@ $fl=$lib_path."/FlexAID";
 $FlexAID_Command_base = $fl." ".$config_file." ".$ga_file." ";
 $flxdih=get_nflxdih($lignam);
 
-write_CONFIG($pdbnam,$lignam,$flxdih,$clfnam,$config_file);
+write_CONFIG($pdbnam,$lignam,$flxdih,$clfnam,$config_file, $lib_path);
 
 $nrun=0;
 $best_cf=999999999999;

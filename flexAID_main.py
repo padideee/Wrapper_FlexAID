@@ -4,9 +4,11 @@ import shutil
 import subprocess
 import json
 import pandas as pd
+from pandas.io.json import json_normalize
 import math
 import sys
 import os
+
 
 
 def FlexAID(protein, cleft, ligs, smiles_directory, population, generation, run, lib_path):
@@ -29,7 +31,9 @@ def analyse(iteration, cut_off):
 
     with open(file_name) as json_file:
         data = json.load(json_file)
+    data = json_normalize(data['log'])
     df = pd.DataFrame(data)
+    df.CF = df.CF.astype(float)
     df = df.sort_values(by=['CF'], ignore_index=True)
     l = math.floor(len(df) * cut_off)
     df_new = df[:l, :]
