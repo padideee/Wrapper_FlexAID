@@ -35,17 +35,15 @@ def analyse(iteration, cut_off):
     df = pd.DataFrame(data)
     df.CF = df.CF.astype(float)
     df = df.sort_values(by=['CF'], ignore_index=True)
-    l = math.floor(len(df) * cut_off)
-    df_new = df[:l, :]
+    l = math.ceil(len(df) * cut_off)
+    df_new = df.iloc[:l, :]
     if cut_off != 1:
-        work_d = os.path.abspath(os.getcwd())
-        bad_files_1 = os.path.join(work_d, 'logfile_*')
-        de = glob.glob(bad_files_1)
-        bad_files_2 = os.path.join(work_d, '*.pdb')
+        de = glob.glob('logfile_*')
+        bad_files_2 = glob.glob('*.pdb')
         de.extend(bad_files_2)
-        bad_files_3 = os.path.join(work_d, 'CONFIG*')
+        bad_files_3 = glob.glob('CONFIG*')
         de.extend(bad_files_3)
-        bad_files_4 = os.path.join(work_d, 'ga_inp*')
+        bad_files_4 = glob.glob('ga_inp*')
         de.extend(bad_files_4)
 
         for i in de:
@@ -87,13 +85,13 @@ def main():
     try:
 
         if 10000 < num_ligs <= 600000:
-            cut_off = [1, .1, .01]
+            cut_off = [.01, .1, 1]
             populations = [250, 1000, 1000]
             generations = [250, 1000, 1000]
             runs = [1, 1, 10]
 
         elif 1000 < num_ligs <= 10000:
-            cut_off = [1, .01]
+            cut_off = [.01, 1]
             populations = [500, 1000]
             generations = [500, 1000]
             runs = [1, 10]
