@@ -4,6 +4,7 @@ import shutil
 import subprocess
 import json
 import pandas as pd
+import numpy as np
 from pandas.io.json import json_normalize
 import math
 import sys
@@ -49,12 +50,11 @@ def analyse(iteration, cut_off):
         for i in de:
             os.remove(i)
 
-    with open('lig_list_new.txt', 'w') as outfile:
-        outfile.write('\n'.join(df_new['ID'].astype(str).values))
+    np.savetxt(r'lig_list_new.txt', df_new.ID.values, fmt='%s')
 
     log_name = 'top_CF_' + str(iteration) + '.txt'
-    with open( log_name, 'w') as outfile:
-        outfile.write('\n'.join(df_new.astype(str).values))
+    np.savetxt(log_name, df_new.values, fmt='%s')
+
 
 
 def main():
