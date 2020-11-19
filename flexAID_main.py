@@ -5,11 +5,10 @@ import subprocess
 import json
 import pandas as pd
 import numpy as np
-from pandas.io.json import json_normalize
+from pandas import json_normalize
 import math
 import sys
 import os
-
 
 
 def FlexAID(protein, cleft, ligs, smiles_directory, population, generation, run, lib_path):
@@ -38,23 +37,27 @@ def analyse(iteration, cut_off):
     df = df.sort_values(by=['CF'], ignore_index=True)
     l = math.ceil(len(df) * cut_off)
     df_new = df.iloc[:l, :]
+
+    de = glob.glob('logfile_*')
+    bad_files_3 = glob.glob('CONFIG*')
+    de.extend(bad_files_3)
+    bad_files_4 = glob.glob('ga_inp*')
+    de.extend(bad_files_4)
+    bad_files_5 = glob.glob('*.log')
+    de.extend(bad_files_5)
     if cut_off != 1:
-        de = glob.glob('logfile_*')
         bad_files_2 = glob.glob('*.pdb')
         de.extend(bad_files_2)
-        bad_files_3 = glob.glob('CONFIG*')
-        de.extend(bad_files_3)
-        bad_files_4 = glob.glob('ga_inp*')
-        de.extend(bad_files_4)
 
-        for i in de:
-            os.remove(i)
-
-    np.savetxt(r'lig_list_new.txt', df_new.ID.values, fmt='%s')
+    for i in de:
+        os.remove(i)
 
     log_name = 'top_CF_' + str(iteration) + '.txt'
     np.savetxt(log_name, df_new.values, fmt='%s')
 
+    df_new.ID = df_new.ID.str[:-2]
+    df_new.ID = df_new.ID.astype(str) + '.inp'
+    np.savetxt(r'lig_list_new.txt', df_new.ID.values, fmt='%s')
 
 
 def main():
@@ -101,7 +104,6 @@ def main():
             populations = [1000]
             generations = [1000]
             runs = [10]
-
 
     except:
 
